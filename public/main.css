@@ -1,5 +1,5 @@
 body {
-  background: lightyellow;
+  background: lightskyblue;
 }
 
 .flex-center {
@@ -7,23 +7,6 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-
-.content {
-  height: 80vh;
-  width: 100%;
-}
-
-.header {
-  background: lightskyblue;
-  height: 10vh;
-  width: 100%;
-}
-
-.footer {
-  background: lightskyblue;
-  height: 10vh;
-  width: 100%;
 }
 
 .list-div {
