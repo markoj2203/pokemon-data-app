@@ -7,6 +7,10 @@ export default function PokemonPage() {
   const pokemonName = useSelector((state) => state.pokemonName);
   const [data, setData] = useState([]);
 
+  const openModal = () => {
+    alert("open modal");
+  };
+
   useEffect(() => {
     async function getPokemonData() {
       let arrData = [];
@@ -53,13 +57,13 @@ export default function PokemonPage() {
               {item.abilities.map((ability, i) => {
                 if (item.abilities.length === i + 1) {
                   return (
-                    <span>
+                    <span key={i}>
                       <b>{ability.ability.name}</b>
                     </span>
                   );
                 } else {
                   return (
-                    <span>
+                    <span key={i}>
                       <b>{ability.ability.name + ", "}</b>
                     </span>
                   );
@@ -72,8 +76,9 @@ export default function PokemonPage() {
                 <button
                   key={i}
                   type="button"
-                  class="btn btn-outline-dark"
+                  className="btn btn-outline-dark"
                   style={{ margin: "1%" }}
+                  onClick={openModal}
                 >
                   {type.type.name}
                 </button>
