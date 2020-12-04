@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import capitalizeFirstLetter from "../functions/main";
 
 export default function PokemonPage() {
-  const pokemonName = useSelector((state) => state.pokemonName);
+  const pokemonName = useSelector((state) => state.goToPokemonPage.pokemonName);
   const [data, setData] = useState([]);
 
-  const openModal = () => {
-    alert("open modal");
+  const dispatch = useDispatch();
+
+  const triggerModal = (visibiity, pokemonType) => {
+    dispatch({
+      type: "MODAL_VISIBILITY",
+      visibility: visibiity,
+    });
+
+    dispatch({
+      type: "POKEMON_LIST_BY_TYPE",
+      pokemonByType: pokemonType,
+    });
   };
 
   useEffect(() => {
@@ -17,7 +27,6 @@ export default function PokemonPage() {
       await axios
         .get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}/`)
         .then((result) => {
-          console.log(result.data);
           arrData.push(result.data);
         });
       setData(arrData);
@@ -78,7 +87,7 @@ export default function PokemonPage() {
                   type="button"
                   className="btn btn-outline-dark"
                   style={{ margin: "1%" }}
-                  onClick={openModal}
+                  onClick={() => triggerModal(true, type.type.name)}
                 >
                   {type.type.name}
                 </button>

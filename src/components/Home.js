@@ -111,7 +111,7 @@ export default function Content() {
 
   useEffect(() => {
     getData();
-  }, [limit, maxCount, searchTerm]);
+  }, [limit, maxCount]);
 
   useEffect(() => {
     //Get Type List
@@ -134,6 +134,19 @@ export default function Content() {
     }
     getAbilityList();
   }, []);
+
+  useEffect(() => {
+    let result = data.filter(function (e) {
+      if (e.name.includes(searchTerm)) {
+        return e.name;
+      }
+    });
+    if (searchTerm !== "") {
+      setData(result);
+    } else {
+      getData();
+    }
+  }, [searchTerm]);
 
   return (
     <div style={{ width: "50%" }}>
