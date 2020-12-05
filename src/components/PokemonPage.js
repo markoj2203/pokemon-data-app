@@ -36,7 +36,7 @@ export default function PokemonPage() {
 
   const triggerModal = (visibiity, pokemonType) => {
     getPokemonByType(pokemonType);
-    console.log(pokemonTypeData);
+
     dispatch({
       type: "MODAL_VISIBILITY",
       visibility: visibiity,
