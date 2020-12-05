@@ -18,10 +18,19 @@ const changeModalVisibility = (state = {}, action) => {
   }
 };
 
-const pokemonListByType = (state = {}, action) => {
+const pokemonTypeName = (state = {}, action) => {
   switch (action.type) {
-    case "POKEMON_LIST_BY_TYPE":
-      return { ...state, pokemonByType: action.pokemonByType };
+    case "POKEMON_TYPE_NAME":
+      return { ...state, pokemonTypeName: action.pokemonTypeName };
+    default:
+      return state;
+  }
+};
+
+const pokemonTypeData = (state = {}, action) => {
+  switch (action.type) {
+    case "POKEMON_TYPE_DATA":
+      return { ...state, pokemonTypeData: action.pokemonTypeData };
     default:
       return state;
   }
@@ -30,7 +39,8 @@ const pokemonListByType = (state = {}, action) => {
 const rootReducer = combineReducers({
   goToPokemonPage,
   changeModalVisibility,
-  pokemonListByType,
+  pokemonTypeName,
+  pokemonTypeData,
 });
 
 export default rootReducer;

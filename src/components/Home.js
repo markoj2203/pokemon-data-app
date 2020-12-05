@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Spinner from "./Spinner";
 
 export default function Content() {
   const [limit, setLimit] = useState(20);
@@ -12,6 +13,7 @@ export default function Content() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchByType, setSearchByType] = useState("");
   const [searchByAbility, setSearchByAbility] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -34,54 +36,104 @@ export default function Content() {
     setSearchByAbility(event.target.value);
   };
 
+  //Load 20 more pokemon
   const loadMoreData = () => {
+    setLoading(true);
     setLimit(limit + 20);
+    setLoading(false);
   };
 
-  const loadAllData = () => {
-    async function getMaxCount() {
+  //Load all pokemons
+  const loadAllData = async () => {
+    try {
+      setLoading(true);
       await axios.get(`https://pokeapi.co/api/v2/pokemon/`).then((result) => {
         let count = result.data.count;
         setMaxCount(count);
+        setLoading(false);
       });
+    } catch (error) {
+      console.log(error);
     }
-    getMaxCount();
   };
 
-  async function getDataByType() {
-    let arrData = [];
-    await axios
-      .get(`https://pokeapi.co/api/v2/type/${searchByType}`)
-      .then((result) => {
-        //console.log(result.data.pokemon);
-        result.data.pokemon.map((item) => arrData.push(item.pokemon));
-      });
-    setData(arrData);
-  }
+  //Load pokemon by type
+  const getDataByType = async () => {
+    try {
+      setLoading(true);
+      let arrData = [];
+      await axios
+        .get(`https://pokeapi.co/api/v2/type/${searchByType}`)
+        .then((result) => {
+          //console.log(result.data.pokemon);
+          result.data.pokemon.map((item) => arrData.push(item.pokemon));
+        });
+      setData(arrData);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //Load pokemon by ability
+  const getDataByAbility = async () => {
+    try {
+      setLoading(true);
+      let arrData = [];
+      await axios
+        .get(`https://pokeapi.co/api/v2/ability/${searchByAbility}`)
+        .then((result) => {
+          //console.log(result.data.pokemon);
+          result.data.pokemon.map((item) => arrData.push(item.pokemon));
+        });
+      setData(arrData);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //Load list of pokemons
+  const getData = async () => {
+    try {
+      setLoading(true);
+      await axios
+        .get(
+          `https://pokeapi.co/api/v2/pokemon/?limit=${
+            maxCount !== 0 ? maxCount : limit
+          }&offset=0`
+        )
+        .then((result) => {
+          let arrData = result.data.results;
+          setData(arrData);
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  async function getDataByAbility() {
-    let arrData = [];
-    await axios
-      .get(`https://pokeapi.co/api/v2/ability/${searchByAbility}`)
-      .then((result) => {
-        //console.log(result.data.pokemon);
-        result.data.pokemon.map((item) => arrData.push(item.pokemon));
-      });
-    setData(arrData);
-  }
-
-  async function getData() {
-    await axios
-      .get(
-        `https://pokeapi.co/api/v2/pokemon/?limit=${
-          maxCount !== 0 ? maxCount : limit
-        }&offset=0`
-      )
-      .then((result) => {
+  //Get Type List
+  const getTypeList = async () => {
+    try {
+      await axios.get(`https://pokeapi.co/api/v2/type/`).then((result) => {
         let arrData = result.data.results;
-        setData(arrData);
+        setTypeList(arrData);
       });
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //Get Ability List
+  const getAbilityList = async () => {
+    try {
+      await axios.get(`https://pokeapi.co/api/v2/ability/`).then((result) => {
+        let arrData = result.data.results;
+        setAbilityList(arrData);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (
@@ -114,24 +166,7 @@ export default function Content() {
   }, [limit, maxCount]);
 
   useEffect(() => {
-    //Get Type List
-    async function getTypeList() {
-      await axios.get(`https://pokeapi.co/api/v2/type/`).then((result) => {
-        let arrData = result.data.results;
-        setTypeList(arrData);
-      });
-    }
     getTypeList();
-  }, []);
-
-  useEffect(() => {
-    //Get Ability List
-    async function getAbilityList() {
-      await axios.get(`https://pokeapi.co/api/v2/ability/`).then((result) => {
-        let arrData = result.data.results;
-        setAbilityList(arrData);
-      });
-    }
     getAbilityList();
   }, []);
 
@@ -199,18 +234,22 @@ export default function Content() {
           </form>
         </nav>
       </div>
-      <div className="list-div" style={{ width: "100%" }}>
-        <ul className="list-group">
-          {data.map((item, i) => (
-            <li key={i} className="list-group-item">
-              <span style={{ float: "left" }}>{i + 1}</span>
-              <Link onClick={() => goToPokemonPage(item.name)} to="/pokemon">
-                {item.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {loading === false ? (
+        <div className="list-div" style={{ width: "100%" }}>
+          <ul className="list-group">
+            {data.map((item, i) => (
+              <li key={i} className="list-group-item">
+                <span style={{ float: "left" }}>{i + 1}</span>
+                <Link onClick={() => goToPokemonPage(item.name)} to="/pokemon">
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <Spinner />
+      )}
       <div style={{ textAlign: "center" }}>
         <button
           type="button"

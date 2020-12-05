@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import capitalizeFirstLetter from "../functions/main";
 
 export default function Header() {
-  const pokemonName = useSelector((state) => state.pokemonName);
+  const pokemonName = useSelector((state) => state.goToPokemonPage.pokemonName);
   const [headText, setHeadText] = useState("Pokemon List");
 
   useEffect(() => {

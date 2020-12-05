@@ -12,9 +12,16 @@ export const changeModalVisibility = (visibility) => {
   };
 };
 
-export const pokemonListByType = (pokemonByType) => {
+export const pokemonTypeName = (pokemonTypeName) => {
   return {
-    type: "POKEMON_LIST_BY_TYPE",
-    payload: pokemonByType,
+    type: "POKEMON_TYPE_NAME",
+    payload: pokemonTypeName,
+  };
+};
+
+export const pokemonTypeData = (pokemonTypeData) => {
+  return {
+    type: "POKEMON_TYPE_DATA",
+    payload: pokemonTypeData,
   };
 };
