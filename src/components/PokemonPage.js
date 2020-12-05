@@ -10,6 +10,11 @@ export default function PokemonPage() {
   const [loading, setLoading] = useState(false);
   const [pokemonTypeData, setPokemonTypeData] = useState([]);
 
+  const pokName =
+    pokemonName !== undefined
+      ? pokemonName
+      : localStorage.getItem("pokemonName");
+
   const dispatch = useDispatch();
 
   const getPokemonByType = async (pokemonType) => {
@@ -53,7 +58,7 @@ export default function PokemonPage() {
       setLoading(true);
       let arrData = [];
       await axios
-        .get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}/`)
+        .get(`https://pokeapi.co/api/v2/pokemon/${pokName}/`)
         .then((result) => {
           arrData.push(result.data);
         });
@@ -65,7 +70,7 @@ export default function PokemonPage() {
   };
   useEffect(() => {
     getPokemonData();
-  }, [pokemonName]);
+  }, [pokName]);
 
   return (
     <div

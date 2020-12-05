@@ -18,9 +18,13 @@ export default function Content() {
   const dispatch = useDispatch();
 
   const goToPokemonPage = (pokemonName) => {
+    localStorage.setItem("pokemonName", pokemonName);
+
+    const pokName = localStorage.getItem("pokemonName");
+
     dispatch({
       type: "GO_TO_POKEMON_PAGE",
-      pokemonName: pokemonName,
+      pokemonName: pokName,
     });
   };
 
